@@ -1,0 +1,61 @@
+
+>All credentials will be stored in environment variables
+
+>this will be done via envrc file
+
+>On the instance we are running this on install direnv with ```sudo apt-get install direnv```
+alternativly we could get these from SSM parameter store using boto3
+
+>create the .envrc file and add the correct variables to export
+
+touch .envrc
+
+export UN="EXAMPLE CLIENT USERNAME"
+export PW="EXAMPLE CLIENT PASSWORD"
+
+>Allow the direnv to be used and activate it 
+direnv allow
+source .envrc 
+
+
+>lockdown the file to 600 permissions and give ownership to user running the selenium test
+
+>add the script to a cron job that runs once an hour
+
+eval "$(direnv export bash)"
+
+INSTALL CHROME
+
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i --force-depends google-chrome-stable_current_amd64.deb
+sudo apt-get install -f
+
+DOWNLOAD SELENIUM CHROME DRIVER
+
+wget https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip
+
+INSTALL SOME DEPENDENCIES
+
+sudo apt-get install direnv unzip python3-pip
+
+INSTALL PIP REQUIREMENTS
+
+cd to script folder
+
+pip3 install -r requirements.txt
+
+
+NOTE pip3 could not find package-resources from the compiled requirements file
+
+
+Hook direnv to the profile
+
+add as very last line to ~/.bashrc
+
+eval "$(direnv hook bash)"
+
+SETUP CRON JOB AND ALLOW IT TO USE DIRENV TO EXPORT ENVIRONMENT VARIABLES 
+
+
+1 * * * * cd /home/ubuntu/Sal/ && direnv exec . /usr/bin/python3 sal.py
+
